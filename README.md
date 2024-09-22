@@ -36,7 +36,7 @@ $CFG->prefix    = 'mdl_';
 GRANT ALL PRIVILEGES ON *.* TO 'bani'@'localhost' IDENTIFIED BY '000333soundwin' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 
-6- `sudo lsof -i :80`
+6- npm install -g browser-sync
 
 # To start the application:
 
