@@ -1,5 +1,52 @@
 # Moodle
 
+# Prerequisites
+
+*install php* `brew install php` (for macbook)
+*install mysql* `brew install mysql` if you haven't already have it (for macbook)
+*install composer (globally)* `brew install composer` (for macbook)
+*install node* if you haven't already had it
+*install lynx* `brew install lynx`
+
+# Install the application:
+Go to the moodle folder:
+1- composer install
+2- npm install
+3- cp config-dist.php config.php
+
+4- edit config.php which you've just created:
+$CFG->dirroot   = '[path/to]/moodle';
+$CFG->dbtype    = 'mysqli';
+$CFG->dblibrary = 'native';
+$CFG->dbhost    = 'localhost';
+$CFG->dbname    = 'moodle';is it isis
+$CFG->dbuser    = 'root'; (step 5.6)
+$CFG->dbpass    = ''; (step 5.6)
+$CFG->prefix    = 'mdl_'; 
+
+5- setup database
+  5.1- start your mysql: `brew services start mysql` (for mac)
+          you can check the status: `brew service list` to ensure it is up and running
+  5.2- open your mysql workbench
+  5.3- create a schema with the name: moodle
+  5.4- got to server > Users & Privileges
+  5.5- add account, give it your name and a password on local host
+  5.6- match it with config.php file you've created (Step 4)
+
+GRANT ALL PRIVILEGES ON *.* TO 'bani'@'localhost' IDENTIFIED BY '000333soundwin' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
+6- `sudo lsof -i :80`
+
+# To start the application:
+
+1- brew services start mysql
+2- brew services list (to make sure everything is running as expected)
+3- mysql -u root -p
+4- sudo apachectl start (restart)
+5- sudo apachectl status (to verify Apache is working as expected)
+6- sudo apachectl configtest (to verify Apache config is alright, expect Syntax OK)
+
 <p align="center"><a href="https://moodle.org" target="_blank" title="Moodle Website">
   <img src="https://raw.githubusercontent.com/moodle/moodle/main/.github/moodlelogo.svg" alt="The Moodle Logo">
 </a></p>
@@ -7,6 +54,75 @@
 [Moodle][1] is the World's Open Source Learning Platform, widely used around the world by countless universities, schools, companies, and all manner of organisations and individuals.
 
 Moodle is designed to allow educators, administrators and learners to create personalised learning environments with a single robust, secure and integrated system.
+
+##httpd.conf:
+## Global Settings
+ServerRoot "/usr/local/opt/httpd"
+ServerName localhost
+Listen 8080
+
+# Load Modules
+LoadModule php_module /usr/local/opt/php/lib/httpd/modules/libphp.so
+LoadModule mpm_prefork_module lib/httpd/modules/mod_mpm_prefork.so
+LoadModule rewrite_module /usr/local/Cellar/httpd/2.4.62/lib/httpd/modules/mod_rewrite.so
+LoadModule mime_module lib/httpd/modules/mod_mime.so
+LoadModule log_config_module lib/httpd/modules/mod_log_config.so
+LoadModule env_module lib/httpd/modules/mod_env.so
+LoadModule headers_module lib/httpd/modules/mod_headers.so
+LoadModule setenvif_module lib/httpd/modules/mod_setenvif.so
+LoadModule dir_module lib/httpd/modules/mod_dir.so
+LoadModule alias_module lib/httpd/modules/mod_alias.so
+LoadModule authz_core_module lib/httpd/modules/mod_authz_core.so
+LoadModule authz_host_module lib/httpd/modules/mod_authz_host.so
+LoadModule status_module lib/httpd/modules/mod_status.so
+LoadModule unixd_module lib/httpd/modules/mod_unixd.so
+
+
+
+# Document Root and Directory Configuration
+<VirtualHost *:8080>
+    ServerAdmin webmaster@localhost
+    DocumentRoot "/Users/ben/dev/moodle"
+    ServerName localhost
+
+    <FilesMatch \.php$>
+        SetHandler application/x-httpd-php
+    </FilesMatch>
+
+    <Directory "/Users/ben/dev/moodle">
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+
+# Logging Configuration
+ErrorLog "/usr/local/var/log/httpd/error_log"
+LogLevel warn
+CustomLog "/usr/local/var/log/httpd/access_log" common
+
+# DirectoryIndex: sets the file that Apache will serve if a directory is requested.
+<IfModule dir_module>
+    DirectoryIndex index.php index.html
+</IfModule>
+
+# Accept access to .ht* files
+<Files ".ht*">
+    Require all granted
+</Files>
+
+# Enable server-status page
+<Location "/server-status">
+    SetHandler server-status
+    Require all granted
+</Location>
+
+
+#Locate the User and Group Directives:
+User _www
+Group _www
+
+
 
 ## Documentation
 
