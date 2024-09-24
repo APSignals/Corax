@@ -2,13 +2,14 @@
 
 # Prerequisites
 
-*install php* `brew install php` (for macbook)
-*install mysql* `brew install mysql` if you haven't already have it (for macbook)
-*install composer (globally)* `brew install composer` (for macbook)
-*install node* if you haven't already had it
-*install lynx* `brew install lynx`
+_install php_ `brew install php` (for macbook)
+_install mysql_ `brew install mysql` if you haven't already have it (for macbook)
+_install composer (globally)_ `brew install composer` (for macbook)
+_install node_ if you haven't already had it
+_install lynx_ `brew install lynx`
 
 # Install the application:
+
 Go to the moodle folder:
 1- composer install
 2- npm install
@@ -16,24 +17,24 @@ Go to the moodle folder:
 
 4- edit config.php which you've just created:
 $CFG->dirroot   = '[path/to]/moodle';
-$CFG->dbtype    = 'mysqli';
+$CFG->dbtype = 'mysqli';
 $CFG->dblibrary = 'native';
-$CFG->dbhost    = 'localhost';
+$CFG->dbhost = 'localhost';
 $CFG->dbname    = 'moodle';is it isis
-$CFG->dbuser    = 'root'; (step 5.6)
+$CFG->dbuser = 'root'; (step 5.6)
 $CFG->dbpass    = ''; (step 5.6)
-$CFG->prefix    = 'mdl_'; 
+$CFG->prefix = 'mdl\_';
 
 5- setup database
-  5.1- start your mysql: `brew services start mysql` (for mac)
-          you can check the status: `brew service list` to ensure it is up and running
-  5.2- open your mysql workbench
-  5.3- create a schema with the name: moodle
-  5.4- got to server > Users & Privileges
-  5.5- add account, give it your name and a password on local host
-  5.6- match it with config.php file you've created (Step 4)
+5.1- start your mysql: `brew services start mysql` (for mac)
+you can check the status: `brew service list` to ensure it is up and running
+5.2- open your mysql workbench
+5.3- create a schema with the name: moodle
+5.4- got to server > Users & Privileges
+5.5- add account, give it your name and a password on local host
+5.6- match it with config.php file you've created (Step 4)
 
-GRANT ALL PRIVILEGES ON *.* TO 'bani'@'localhost' IDENTIFIED BY '000333soundwin' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON _._ TO 'bani'@'localhost' IDENTIFIED BY '000333soundwin' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 
 6- npm install -g browser-sync
@@ -56,12 +57,15 @@ FLUSH PRIVILEGES;
 Moodle is designed to allow educators, administrators and learners to create personalised learning environments with a single robust, secure and integrated system.
 
 ##httpd.conf:
+
 ## Global Settings
+
 ServerRoot "/usr/local/opt/httpd"
 ServerName localhost
 Listen 8080
 
 # Load Modules
+
 LoadModule php_module /usr/local/opt/php/lib/httpd/modules/libphp.so
 LoadModule mpm_prefork_module lib/httpd/modules/mod_mpm_prefork.so
 LoadModule rewrite_module /usr/local/Cellar/httpd/2.4.62/lib/httpd/modules/mod_rewrite.so
@@ -77,13 +81,12 @@ LoadModule authz_host_module lib/httpd/modules/mod_authz_host.so
 LoadModule status_module lib/httpd/modules/mod_status.so
 LoadModule unixd_module lib/httpd/modules/mod_unixd.so
 
-
-
 # Document Root and Directory Configuration
-<VirtualHost *:8080>
-    ServerAdmin webmaster@localhost
-    DocumentRoot "/Users/ben/dev/moodle"
-    ServerName localhost
+
+<VirtualHost \*:8080>
+ServerAdmin webmaster@localhost
+DocumentRoot "/Users/ben/dev/moodle"
+ServerName localhost
 
     <FilesMatch \.php$>
         SetHandler application/x-httpd-php
@@ -94,35 +97,68 @@ LoadModule unixd_module lib/httpd/modules/mod_unixd.so
         AllowOverride All
         Require all granted
     </Directory>
+
 </VirtualHost>
 
 # Logging Configuration
+
 ErrorLog "/usr/local/var/log/httpd/error_log"
 LogLevel warn
 CustomLog "/usr/local/var/log/httpd/access_log" common
 
 # DirectoryIndex: sets the file that Apache will serve if a directory is requested.
+
 <IfModule dir_module>
     DirectoryIndex index.php index.html
 </IfModule>
 
-# Accept access to .ht* files
-<Files ".ht*">
-    Require all granted
+# Accept access to .ht\* files
+
+<Files ".ht\*">
+Require all granted
 </Files>
 
 # Enable server-status page
+
 <Location "/server-status">
-    SetHandler server-status
-    Require all granted
+SetHandler server-status
+Require all granted
 </Location>
 
-
 #Locate the User and Group Directives:
-User _www
-Group _www
+User \_www
+Group \_www
 
+# How to run moodle whit docker for development
 
+Install Docker and Docker-Compose. [link](https://docs.docker.com/engine/install/)
+
+Open the terminal and `cd` to main directory. After that, run command below to start moodle container for development:
+
+```bash
+docker-compose up --build -d
+```
+
+For stop container you can use command below:
+
+```bash
+docker-compose down
+```
+
+### Run faster
+
+For more confteble to run moodle with docker you can build a docker image and after that change `docker-compose.yml` file.
+follow step below:
+
+- ```bash
+  docker build . -t corax
+  ```
+
+- Open `docker-compose.yml` file and comment `build` key in `moodle` service. add `image` key to `moodle` service under commented `build` key whit `corax:latest` value.
+
+- ```bash
+  docker-compose up -d
+  ```
 
 ## Documentation
 
